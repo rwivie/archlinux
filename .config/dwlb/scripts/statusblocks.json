@@ -1,0 +1,27 @@
+[
+    {
+	"command": "music_status",
+	"frequency": 10,
+	"color": "#d699b6"
+    },
+    {
+	"command": "dwl-sound",
+	"frequency": 1,
+	"color": "#7fbbb3"
+    },
+    {
+	"command": "dwl-cpu",
+	"frequency": 3,
+	"color": "#e69875"
+    },
+    {
+	"command": "dwl-mem",
+	"frequency": 5,
+	"color": "#a7c080"
+    },
+    {
+	"command": "dwl-date",
+	"frequency": 1,
+	"color": "#dbbc7f"
+    },
+]

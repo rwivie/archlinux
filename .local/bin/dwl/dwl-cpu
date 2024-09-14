@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# help: https://www.idnt.net/en-US/kb/941772
+
+IDLE_CACHE_FILE=/tmp/cpu-usage-idle-cache
+SUM_CACHE_FILE=/tmp/cpu-usage-sum-cache
+
+cpu=$(awk 'NR==1 {$1="";print}' /proc/stat)
+cpu=${cpu#?}
+
+idle=$(echo $cpu | cut -d' ' -f4)
+sum=$(($(echo $cpu | tr ' ' +)))
+
+if [ ! -f "$IDLE_CACHE_FILE" -o ! -f "$SUM_CACHE_FILE" ]; then
+    echo $idle > "$IDLE_CACHE_FILE"
+    echo $sum > "$SUM_CACHE_FILE"
+    echo 'first iteration'
+    exit
+fi
+
+read -r idle_last < "$IDLE_CACHE_FILE"
+idle_delta=$((idle-idle_last))
+
+read -r sum_last < "$SUM_CACHE_FILE"
+sum_delta=$((sum-sum_last))
+
+used=$((sum_delta-idle_delta))
+
+usage_expr=100*$used/$sum_delta
+usage=$(awk 'BEGIN {printf("%.1f\n", '"$usage_expr"')}')
+
+echo " ${usage}%  "
+
+echo $idle > "$IDLE_CACHE_FILE"
+echo $sum > "$SUM_CACHE_FILE"

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+awk 'NR==3 {printf(" %.1f%%\n", $3*10/7  )}' /proc/net/wireless

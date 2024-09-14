@@ -1,0 +1,15 @@
+#!/bin/sh
+
+cnt=0
+celsius_expr=
+for dir in /sys/class/thermal/thermal_zone*; do
+    read -r val < ${dir}/temp
+    celsius_expr=${celsius_expr}${val}+
+    cnt=$((cnt+1))
+done
+celsius_expr="(${celsius_expr%?})/(${cnt}*1000)"
+fahrenheit_expr=${celsius_expr}*1.8+32
+
+fahrenheit=$(awk 'BEGIN {printf("%.1f\n", '"$fahrenheit_expr"')}')
+
+echo " ${fahrenheit}°"

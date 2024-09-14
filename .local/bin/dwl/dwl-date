@@ -1,0 +1,5 @@
+#!/bin/sh
+
+#date '+ %_I:%M:%S %_m/%_d/%y' | tr -s ' ' | sed 's|/ |/|'
+
+date '+ %b %d (%a) %I:%M:%S%p  '

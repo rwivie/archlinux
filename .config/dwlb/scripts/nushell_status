@@ -1,0 +1,31 @@
+#!/usr/bin/env nu
+
+const delimeter = '  '
+
+mut blocks = (open -r /home/ron/.config/dwlb/scripts/statusblocks.json | from json | insert value '' | enumerate)
+mut cnt = 0
+
+loop {
+	let tmp = $cnt
+	let refresh = ($blocks | par-each {|it|
+		if $tmp mod $it.item.frequency == 0 {
+			$it.index
+		}
+	})
+	if not ($refresh | is-empty) {
+		$blocks = ($blocks | par-each {|it|
+			if $it.index in $refresh {
+				update item.value $"(^$it.item.command)"
+			} else {
+				$it
+			}
+		} | sort-by index)
+		dwlb -status all ($blocks | each {|it| 
+			if not ($it.item.value | is-empty) {
+				$"^fg\(($it.item.color)\)($it.item.value)"
+			}
+		} | str join $delimeter)
+	}
+	$cnt = $cnt + 1
+	sleep 1sec
+}

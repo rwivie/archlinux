@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Path to temperature input file
+temp_file="/sys/class/hwmon/hwmon0/temp1_input"
+
+# Check if the temperature file exists
+if [ ! -f "$temp_file" ]; then
+    echo " N/A"
+    exit 1
+fi
+
+# Read temperature value (in millidegrees Celsius)
+read -r val < "$temp_file"
+
+# Convert to Celsius
+celsius=$(echo "scale=1; $val / 1000" | bc)
+
+# Convert to Fahrenheit
+fahrenheit=$(echo "scale=1; ($celsius * 1.8) + 32" | bc)
+
+# Output the temperature in Fahrenheit
+echo " ${clesius}°"
